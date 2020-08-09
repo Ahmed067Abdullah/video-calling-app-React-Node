@@ -1,0 +1,77 @@
+.users-container {
+  flex: 1;
+  background-color: white;
+  border-radius: 6px;
+  padding: 10px 5px;
+}
+
+.sub-heading {
+  color: #4e4e4e;
+  font-size: 20px;
+  font-weight: 500;
+  margin: 5px 0;
+}
+
+.users-list {
+  overflow-y: auto;
+  height: calc(100vh - 175px);
+}
+
+/* width */
+
+.users-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+
+.users-list::-webkit-scrollbar-track {
+  background: #f4f4f4;
+}
+
+/* Handle */
+
+.users-list::-webkit-scrollbar-thumb {
+  background: #d1d1d1;
+}
+
+/* Handle on hover */
+
+.users-list::-webkit-scrollbar-thumb:hover {
+  background: #c1c1c1;
+}
+
+.users-list>div {
+  background-color: #f4f4f4;
+  border-radius: 6px;
+  margin: 10px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-name {
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 18px;
+  text-overflow: ellipsis;
+  width: calc(100% - 50px);
+  display: inline-block;
+  text-align: left;
+  user-select: none;
+}
+
+.call-icon {
+  justify-self: flex-end;
+  background-color: green;
+  color: white;
+  padding: 5px 8px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.empty-state-text {
+  margin-top: 30px;
+  opacity: 0.7;
+}
