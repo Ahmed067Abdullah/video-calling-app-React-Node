@@ -1,5 +1,5 @@
 .users-container {
-  flex: 1;
+  width: 25vw;
   background-color: white;
   border-radius: 6px;
   padding: 10px 5px;

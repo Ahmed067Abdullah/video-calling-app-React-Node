@@ -1,0 +1,23 @@
+.video-container {
+  width: 75vw;
+}
+
+.video-container>div {
+  width: fit-content;
+  margin: auto;
+  position: relative;
+}
+
+video {
+  width: 60vw;
+  height: 40vw;
+}
+
+.mini-video {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+}
