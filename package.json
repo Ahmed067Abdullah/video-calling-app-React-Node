@@ -1,0 +1,26 @@
+{
+  "name": "video-calling-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "client-install": "cd client && npm install",
+    "server-install": "npm install",
+    "install-all": "npm run client-install && npm run server-install",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon index.js",
+    "client": "cd client && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "deploy": "git push heroku master",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm install --prefix client && npm run build --prefix client"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^5.3.0",
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}
