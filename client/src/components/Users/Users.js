@@ -11,17 +11,14 @@ const Users = ({ users, myId, callUser }) => {
       <p className={classes['sub-heading']}>Online users</p>
       <div className={classes['users-list']}>
         {usersToShow.length
-          ?usersToShow.map(key => {
-          return (
-            <div onClick={() => callUser(key)}>
+          ? usersToShow.map(key =>
+            <div onClick={() => callUser(key)} key={key}>
               <span className={classes["user-name"]}>{users[key].name}</span>
               <div className={classes["call-icon"]}>
                 <FontAwesomeIcon icon={faPhone} />
               </div>
-            </div>
-          );
-        })
-        : <p className={classes['empty-state-text']}>No online users found</p>}
+            </div>)
+          : <p className={classes['empty-state-text']}>No online users found</p>}
       </div>
     </div>
   );
