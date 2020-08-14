@@ -6,24 +6,28 @@ import classes from './IncomingCallModal.module.css';
 const IncomingCallModal = ({ caller, open, handleAccept, handleReject }) => {
   return (
     <ReactModal
-      isOpen={open}
+      isOpen={Boolean(open)}
       style={modalStyles}
     >
-      <div className={classes['content-container']}>
-        <p className={classes.heading}>{caller} is calling you...</p>
-        <div className={classes['btns-container']}>
-          <button
-            className={`${classes.button} ${classes.danger}`}
-            onClick={handleReject}>
-            Reject
-          </button>
-          <button
-            className={`${classes.button} ${classes.success}`}
-            onClick={handleAccept}>
-            Accept
-          </button>
+      {open === 1
+        ? <div className={classes['content-container']}>
+          <p className={classes.heading}>Calling...</p>
         </div>
-      </div>
+        : <div className={classes['content-container']}>
+          <p className={classes.heading}>{caller} is calling you...</p>
+          <div className={classes['btns-container']}>
+            <button
+              className={`${classes.button} ${classes.danger}`}
+              onClick={handleReject}>
+              Reject
+        </button>
+            <button
+              className={`${classes.button} ${classes.success}`}
+              onClick={handleAccept}>
+              Accept
+        </button>
+          </div>
+        </div>}
     </ReactModal >
   );
 };

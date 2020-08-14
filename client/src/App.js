@@ -12,7 +12,7 @@ const ENDPOINT = 'http://localhost:5000';
 function App() {
   const [name, setName] = useState("");
   const [showRegModal, setShowRegModal] = useState(true);
-  const [showIncomingCallModal, setShowIncomingCallModal] = useState(false);
+  const [showCallingModal, setShowCallingModal] = useState(0);
   const [myId, setMyId] = useState("");
   const [users, setUsers] = useState({});
   const [stream, setStream] = useState();
@@ -45,39 +45,38 @@ function App() {
       setUsers(users);
     })
 
+    // Step # 2: When peer recieves a call 
     socket.current.on("incoming-call", data => {
-      console.log('incoming call');
       setCaller(data.from);
       setCallerSignal(data.signal);
-      setShowIncomingCallModal(true);
+      setShowCallingModal(2);
     })
   }, []);
 
   const callUserHandler = id => {
+    setShowCallingModal(1);
     const peer = new Peer({
       initiator: true,
       trickle: false,
       stream: stream,
     });
 
-    // When peer is live (step 1)
+    // Step # 1: When your peer is live and ready to start call
     peer.on("signal", data => {
-      console.log('1');
       socket.current.emit("initiate-call", { userToCall: id, signalData: data, from: { name, id: myId } })
     })
 
-    // When start recieving stream from the partner (step 3)
+    // Step # 6: Finally initaiter gets access to stream of partner
     peer.on("stream", stream => {
-      console.log('2');
       if (partnerVideo.current) {
         partnerVideo.current.srcObject = stream;
       }
     });
 
-    // When partner accepts the call (step 2)
+    // Step # 5: When initiater recieves ack that call is accepted
     socket.current.on("call-accepted", signal => {
-      console.log('3');
       setCallAccepted(true);
+      setShowCallingModal(0);
       peer.signal(signal);
       peerRef.current = peer;
     })
@@ -85,6 +84,10 @@ function App() {
     peer.on('close', () => {
       setCallAccepted(false);
       peerRef.current = null;
+    })
+
+    peer.on('error', (err) => {
+      console.log(err);
     })
   }
 
@@ -96,15 +99,15 @@ function App() {
       stream: stream,
     });
 
-    // Notify partner that stream is accepted (Step 2)
+    // Step # 4:  Notify partner that stream is accepted
     peer.on("signal", data => {
-      console.log('accept-call1')
-      socket.current.emit("accept-call", { signal: data, to: caller.id })
+      if (data.type === "answer") {
+        socket.current.emit("accept-call", { signal: data, to: caller.id })
+      }
     })
 
-    // Accept stream from the partner (Step 1)
+    // Step # 3: Access partners's stream
     peer.on("stream", stream => {
-      console.log('accept-call2')
       partnerVideo.current.srcObject = stream;
       peerRef.current = peer;
     });
@@ -148,15 +151,17 @@ function App() {
         />
         : null}
 
-      {showIncomingCallModal
+      {showCallingModal
         ? <IncomingCallModal
-          open={showIncomingCallModal}
+          open={showCallingModal}
           caller={caller.name}
-          handleAccept={name => {
-            setShowIncomingCallModal(false);
+          handleAccept={() => {
+            setShowCallingModal(0);
             acceptCallHandler();
           }}
-          handleReject={() => setShowIncomingCallModal(false)}
+          handleReject={() => {
+            setShowCallingModal(0);
+          }}
         />
         : null}
     </div>
