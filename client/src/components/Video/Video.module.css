@@ -14,10 +14,9 @@ video {
 }
 
 .mini-video {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+  width: 150px;
+  height: 150px;
   position: absolute;
-  bottom: 25px;
-  right: 25px;
+  bottom: 0;
+  right: 4.5vw;
 }

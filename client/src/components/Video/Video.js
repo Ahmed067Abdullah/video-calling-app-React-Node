@@ -1,24 +1,25 @@
 import React from 'react';
 import classes from './Video.module.css';
 
-const Video = ({ stream, userVideo, partnerVideo, callAccepted }) => {
-  let mainVideo;
-  let miniVideo;
-
-  if (stream) {
-    mainVideo = <video playsInline muted ref={userVideo} autoPlay />;
-  }
+const Video = ({ stream, myVideo, partnerVideo, callAccepted }) => {
+  let partnerVideoJSX;
+  let myVideoJSX;
+  let myVideoClassname = '';
 
   if (callAccepted) {
-    // mainVideo = <video playsInline ref={partnerVideo} autoPlay />;
-    miniVideo = <video playsInline ref={partnerVideo} autoPlay />;
+    partnerVideoJSX = <video playsInline ref={partnerVideo} autoPlay />;
+    myVideoClassname = classes['mini-video'];
+  }
+
+  if (stream) {
+    myVideoJSX = <video className={myVideoClassname} playsInline muted ref={myVideo} autoPlay />;
   }
 
   return (
     <div className={classes['video-container']}>
       <div>
-        {miniVideo}
-        {mainVideo}
+        {myVideoJSX}
+        {partnerVideoJSX}
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ function App() {
   const [callerSignal, setCallerSignal] = useState();
   const [callAccepted, setCallAccepted] = useState(false);
 
-  const userVideo = useRef();
+  const myVideo = useRef();
   const partnerVideo = useRef();
   const socket = useRef();
 
@@ -32,8 +32,8 @@ function App() {
 
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
       setStream(stream);
-      if (userVideo.current) {
-        userVideo.current.srcObject = stream;
+      if (myVideo.current) {
+        myVideo.current.srcObject = stream;
       }
     })
 
@@ -96,8 +96,15 @@ function App() {
     <div className={classes['container']}>
       <p className={classes['main-heading']}>Welcome to your video calling station</p>
       <div className={classes['content']}>
-        <Users users={users} myId={myId} callUser={callPeer} />
-        <Video stream={stream} userVideo={userVideo} partnerVideo={partnerVideo} callAccepted={callAccepted} />
+        <Users
+          myId={myId}
+          users={users}
+          callUser={callPeer} />
+        <Video
+          myVideo={myVideo}
+          stream={stream}
+          partnerVideo={partnerVideo}
+          callAccepted={callAccepted} />
       </div>
 
       {showRegModal
