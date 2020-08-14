@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactModal from 'react-modal';
 import modalStyles from '../../common/modalStyles';
 import classes from './IncomingCallModal.module.css';

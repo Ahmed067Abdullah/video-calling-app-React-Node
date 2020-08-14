@@ -20,3 +20,24 @@ video {
   bottom: 0;
   right: 4.5vw;
 }
+
+.end-call-btn-container {
+  position: absolute;
+  bottom: 25px;
+  width: 100%;
+}
+
+.end-call-btn {
+  background-color: red;
+  padding: 15px 17px;
+  border-radius: 50%;
+  color: white;
+  width: fit-content;
+  margin: auto;
+  cursor: pointer;
+}
+
+.end-call-btn > svg{
+  transform: rotate(-135deg);
+  font-size: 20px;
+}

@@ -23,6 +23,7 @@ function App() {
   const myVideo = useRef();
   const partnerVideo = useRef();
   const socket = useRef();
+  const peerRef = useRef();
 
   useEffect(() => {
     socket.current = io.connect(ENDPOINT);
@@ -45,52 +46,80 @@ function App() {
     })
 
     socket.current.on("incoming-call", data => {
+      console.log('incoming call');
       setCaller(data.from);
       setCallerSignal(data.signal);
       setShowIncomingCallModal(true);
     })
   }, []);
 
-  const callPeer = id => {
+  const callUserHandler = id => {
     const peer = new Peer({
       initiator: true,
       trickle: false,
       stream: stream,
     });
 
+    // When peer is live (step 1)
     peer.on("signal", data => {
+      console.log('1');
       socket.current.emit("initiate-call", { userToCall: id, signalData: data, from: { name, id: myId } })
     })
 
+    // When start recieving stream from the partner (step 3)
     peer.on("stream", stream => {
+      console.log('2');
       if (partnerVideo.current) {
         partnerVideo.current.srcObject = stream;
       }
     });
 
+    // When partner accepts the call (step 2)
     socket.current.on("call-accepted", signal => {
+      console.log('3');
       setCallAccepted(true);
       peer.signal(signal);
+      peerRef.current = peer;
     })
 
+    peer.on('close', () => {
+      setCallAccepted(false);
+      peerRef.current = null;
+    })
   }
 
-  const acceptCall = () => {
+  const acceptCallHandler = () => {
     setCallAccepted(true);
     const peer = new Peer({
       initiator: false,
       trickle: false,
       stream: stream,
     });
+
+    // Notify partner that stream is accepted (Step 2)
     peer.on("signal", data => {
+      console.log('accept-call1')
       socket.current.emit("accept-call", { signal: data, to: caller.id })
     })
 
+    // Accept stream from the partner (Step 1)
     peer.on("stream", stream => {
+      console.log('accept-call2')
       partnerVideo.current.srcObject = stream;
+      peerRef.current = peer;
     });
+
+    peer.on('close', () => {
+      setCallAccepted(false);
+      peerRef.current = null;
+    })
+
     peer.signal(callerSignal);
   }
+
+  const endCallHandler = () => {
+    peerRef.current.destroy();
+  };
 
   return (
     <div className={classes['container']}>
@@ -99,12 +128,13 @@ function App() {
         <Users
           myId={myId}
           users={users}
-          callUser={callPeer} />
+          callUserHandler={callUserHandler} />
         <Video
           myVideo={myVideo}
           stream={stream}
           partnerVideo={partnerVideo}
-          callAccepted={callAccepted} />
+          callAccepted={callAccepted}
+          endCallHandler={endCallHandler} />
       </div>
 
       {showRegModal
@@ -124,7 +154,7 @@ function App() {
           caller={caller.name}
           handleAccept={name => {
             setShowIncomingCallModal(false);
-            acceptCall();
+            acceptCallHandler();
           }}
           handleReject={() => setShowIncomingCallModal(false)}
         />

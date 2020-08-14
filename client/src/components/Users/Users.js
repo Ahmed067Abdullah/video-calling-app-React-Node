@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
 import classes from './Users.module.css';
 
-const Users = ({ users, myId, callUser }) => {
+const Users = ({ users, myId, callUserHandler }) => {
 
   const usersToShow = Object.keys(users).filter(id => id !== myId);
   return (
@@ -12,7 +12,7 @@ const Users = ({ users, myId, callUser }) => {
       <div className={classes['users-list']}>
         {usersToShow.length
           ? usersToShow.map(key =>
-            <div onClick={() => callUser(key)} key={key}>
+            <div onClick={() => callUserHandler(key)} key={key}>
               <span className={classes["user-name"]}>{users[key].name}</span>
               <div className={classes["call-icon"]}>
                 <FontAwesomeIcon icon={faPhone} />
