@@ -29,7 +29,7 @@ io.on('connection', socket => {
   socket.on("reject-call", data => {
     io.to(data.caller.id).emit('call-rejected', {});
   });
-  
+
   socket.on("disconnect-call", data => {
     io.to(data.inCallWith).emit('call-disconnected', {});
   });
@@ -42,5 +42,13 @@ io.on('connection', socket => {
 });
 
 app.get("/", (req, res) => res.json({ "hello": "world" }))
+
+// for production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("../client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "..", "client", "build", "index.html"));
+  });
+}
 
 server.listen(PORT, () => console.log(`Server started on port ${PORT}`))
