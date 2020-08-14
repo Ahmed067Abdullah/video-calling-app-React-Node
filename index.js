@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 
 const app = express();
 const server = require('http').createServer(app);
@@ -43,7 +44,7 @@ io.on('connection', socket => {
   });
 });
 
-app.get("/", (req, res) => res.json({ "hello": "world" }))
+app.get("/home", (req, res) => res.json({ "hello": "world" }));
 
 // for production
 if (process.env.NODE_ENV === "production") {
