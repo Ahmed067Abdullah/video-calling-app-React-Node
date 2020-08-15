@@ -1,5 +1,5 @@
 .video-container {
-  width: 75vw;
+  width: 70vw;
 }
 
 .video-container>div {
@@ -11,6 +11,16 @@
 video {
   width: 60vw;
   height: 40vw;
+}
+
+@media(max-width:768px) {
+  .video-container {
+    width: 100vw;
+  }
+  video {
+    width: 90vw;
+    height: 63vw;
+  }
 }
 
 .mini-video {
@@ -37,7 +47,7 @@ video {
   cursor: pointer;
 }
 
-.end-call-btn > svg{
+.end-call-btn>svg {
   transform: rotate(-135deg);
   font-size: 20px;
 }

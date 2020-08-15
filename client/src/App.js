@@ -11,7 +11,7 @@ const ENDPOINT = 'http://localhost:5000';
 
 function App() {
   const [name, setName] = useState("");
-  const [showRegModal, setShowRegModal] = useState(false);
+  const [showRegModal, setShowRegModal] = useState(true);
   const [showCallingModal, setShowCallingModal] = useState(0);
   const [myId, setMyId] = useState("");
   const [users, setUsers] = useState({});
@@ -29,9 +29,9 @@ function App() {
 
   useEffect(() => {
     socket.current = io.connect(ENDPOINT);
-    const naam = Math.random().toString();
-    socket.current.emit("user-registered", naam);
-    setName(naam);
+    // const naam = Math.random().toString();
+    // socket.current.emit("user-registered", naam);
+    // setName(naam);
 
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       .then(stream => {

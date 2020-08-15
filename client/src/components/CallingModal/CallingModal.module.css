@@ -2,6 +2,12 @@
   width: 500px;
 }
 
+@media(max-width:600px) {
+  .content-container {
+    width: calc(100vw - 80px);
+  }
+}
+
 .heading {
   margin: 10px 0 20px;
   font-size: 18px;

@@ -1,5 +1,5 @@
 .users-container {
-  width: 25vw;
+  width: 30vw;
   background-color: white;
   border-radius: 6px;
   padding: 10px 5px;
@@ -15,6 +15,17 @@
 .users-list {
   overflow-y: auto;
   height: calc(100vh - 175px);
+}
+
+@media(max-width:768px) {
+  .users-container {
+    width: 80vw;
+    margin-top: 20px;
+  }
+  .users-list {
+    overflow-y: auto;
+    height: 300px;
+  }
 }
 
 /* width */

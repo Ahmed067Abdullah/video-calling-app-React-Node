@@ -13,6 +13,13 @@
   display: block;
 }
 
+@media(max-width:600px) {
+  .input {
+    width: calc(100vw - 100px);
+    max-width: 400px;
+  }
+}
+
 .button {
   padding: 8px 16px;
   outline: none;
