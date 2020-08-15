@@ -14,6 +14,7 @@ const RegisterUserModal = ({ open, handleClose }) => {
   return (
     <ReactModal
       isOpen={open}
+      ariaHideApp={false}
       style={modalStyles}
     >
       <div className={classes['content-container']}>

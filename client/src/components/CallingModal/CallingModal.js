@@ -7,6 +7,7 @@ const CallingModal = ({ caller, open, handleAccept, handleReject, handleCancel }
   return (
     <ReactModal
       isOpen={Boolean(open)}
+      ariaHideApp={false}
       style={modalStyles}
     >
       {open === 1

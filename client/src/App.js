@@ -11,7 +11,7 @@ const ENDPOINT = 'http://localhost:5000';
 
 function App() {
   const [name, setName] = useState("");
-  const [showRegModal, setShowRegModal] = useState(true);
+  const [showRegModal, setShowRegModal] = useState(false);
   const [showCallingModal, setShowCallingModal] = useState(0);
   const [myId, setMyId] = useState("");
   const [users, setUsers] = useState({});
@@ -29,9 +29,9 @@ function App() {
 
   useEffect(() => {
     socket.current = io.connect(ENDPOINT);
-    // const naam = Math.random().toString();
-    // socket.current.emit("user-registered", naam);
-    // setName(naam);
+    const naam = Math.random().toString();
+    socket.current.emit("user-registered", naam);
+    setName(naam);
 
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       .then(stream => {
@@ -70,6 +70,7 @@ function App() {
   const endCall = () => {
     setCallAccepted(false);
     setInCallWith(null);
+    socket.current.off("call-accepted");
     if (peerRef.current) {
       peerRef.current.destroy();
     }
@@ -80,8 +81,9 @@ function App() {
     if (inCallWith) {
       return;
     }
-    setCallingTo(id)
+    setCallingTo(id);
     setShowCallingModal(1);
+
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -122,13 +124,13 @@ function App() {
       socket.current.emit("disconnect-call", { inCallWith })
     }
 
-
     setCallAccepted(true);
     const peer = new Peer({
       initiator: false,
       trickle: false,
       stream: stream,
     });
+    peerRef.current = peer;
 
     // Step # 4:  Notify partner that stream is accepted
     peer.on("signal", data => {
@@ -141,7 +143,6 @@ function App() {
     // Step # 3: Access partners's stream
     peer.on("stream", stream => {
       partnerVideo.current.srcObject = stream;
-      peerRef.current = peer;
     });
 
     peer.on('close', endCall);
@@ -152,10 +153,6 @@ function App() {
     });
 
     peer.signal(callerSignal);
-  };
-
-  const endCallHandler = () => {
-    peerRef.current.destroy();
   };
 
   return (
@@ -172,7 +169,7 @@ function App() {
           stream={stream}
           partnerVideo={partnerVideo}
           callAccepted={callAccepted}
-          endCallHandler={endCallHandler} />
+          endCallHandler={endCall} />
       </div>
 
       {showRegModal
