@@ -37,6 +37,10 @@ io.on('connection', socket => {
     io.to(data.inCallWith).emit('call-disconnected', {});
   });
 
+  socket.on("cancel-call", data => {
+    io.to(data.callingTo).emit('call-canceled', {});
+  });
+
   socket.on('disconnect', () => {
     console.log('user disconnected');
     delete users[socket.id];

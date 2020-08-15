@@ -5,7 +5,7 @@ import Peer from "simple-peer";
 import Users from './components/Users/Users';
 import Video from './components/Video/Video';
 import RegisterUserModal from './components/RegisterUserModal/RegisterUserModal';
-import IncomingCallModal from './components/IncomingCallModal/IncomingCallModal';
+import CallingModal from './components/CallingModal/CallingModal';
 
 const ENDPOINT = 'http://localhost:5000';
 
@@ -18,6 +18,7 @@ function App() {
   const [stream, setStream] = useState();
   const [caller, setCaller] = useState("");
   const [inCallWith, setInCallWith] = useState("");
+  const [callingTo, setCallingTo] = useState("");
   const [callerSignal, setCallerSignal] = useState();
   const [callAccepted, setCallAccepted] = useState(false);
 
@@ -59,12 +60,19 @@ function App() {
       setShowCallingModal(0);
     });
 
+    socket.current.on('call-canceled', () => {
+      setShowCallingModal(0);
+    });
+
     socket.current.on('call-disconnected', endCall);
   }, []);
 
   const endCall = () => {
     setCallAccepted(false);
     setInCallWith(null);
+    if (peerRef.current) {
+      peerRef.current.destroy();
+    }
     peerRef.current = null;
   }
 
@@ -72,12 +80,14 @@ function App() {
     if (inCallWith) {
       return;
     }
+    setCallingTo(id)
     setShowCallingModal(1);
     const peer = new Peer({
       initiator: true,
       trickle: false,
       stream: stream,
     });
+    peerRef.current = peer;
 
     // Step # 1: When your peer is live and ready to start call
     peer.on("signal", data => {
@@ -97,7 +107,6 @@ function App() {
       setShowCallingModal(0);
       peer.signal(signal);
       setInCallWith(id);
-      peerRef.current = peer;
     });
 
     peer.on('close', endCall);
@@ -178,7 +187,7 @@ function App() {
         : null}
 
       {showCallingModal
-        ? <IncomingCallModal
+        ? <CallingModal
           open={showCallingModal}
           caller={caller.name}
           handleAccept={() => {
@@ -188,6 +197,11 @@ function App() {
           handleReject={() => {
             setShowCallingModal(0);
             socket.current.emit("reject-call", { caller });
+          }}
+          handleCancel={() => {
+            setShowCallingModal(0);
+            peerRef.current.destroy();
+            socket.current.emit('cancel-call', { callingTo })
           }}
         />
         : null}
