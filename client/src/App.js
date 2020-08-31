@@ -7,8 +7,6 @@ import Video from './components/Video/Video';
 import RegisterUserModal from './components/RegisterUserModal/RegisterUserModal';
 import CallingModal from './components/CallingModal/CallingModal';
 
-const ENDPOINT = 'http://localhost:5000';
-
 function App() {
   const [name, setName] = useState("");
   const [showRegModal, setShowRegModal] = useState(true);
@@ -28,7 +26,7 @@ function App() {
   const peerRef = useRef();
 
   useEffect(() => {
-    socket.current = io.connect(ENDPOINT);
+    socket.current = io.connect();
     // const naam = Math.random().toString();
     // socket.current.emit("user-registered", naam);
     // setName(naam);
